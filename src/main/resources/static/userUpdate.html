@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    用户编号：<input type="text" name="id" id="userId" readonly>
+    用户名：<input type="text" name="name" id="userName">
+        <input type="button" value="update" onclick="updateUser()">
+</body>
+<script src="js/jquery-3.3.1.min.js"></script>
+<script>
+    $(function () {
+        var urlParam = location.search.split("?");
+        var id = urlParam[1].split("=");
+        id = id[1];
+        $.ajax({
+            url:"/toUpdate",
+            data:{
+                id:id
+            },
+            dataType:'json',
+            type:'get',
+            success:function (data) {
+                $("#userId").val(data.user.id);
+                $("#userName").val(data.user.name);
+            }
+        })
+    })
+
+
+    function updateUser() {
+
+        var id = $("#userId").val();
+        var name = $("#userName").val();
+        $.ajax({
+            url:"/update",
+            data:{
+                id:id,
+                name:name
+            },
+            dataType:'json',
+            type:'get',
+            success:function (data) {
+                if(data.status==200){
+                    location.href="userList.html";
+                }
+                if(data.status==500){
+                    alert(data.msg);
+                }
+            }
+        })
+    }
+
+</script>
+</html>
